@@ -5,13 +5,66 @@
 	{%- endif -%}
 {%- endmacro -%}
 
-{%- macro intro(name, state, management) -%}
+{%- macro infobox(title,caretype, location, district, state, country, placetype, management, founded, website) -%}
+{%- if website == 'None' -%}
+    {%- set website='' -%}
+{%- endif -%}
+{%- if founded == 'None' -%}
+    {%- set founded='' -%}
+{%- endif -%}
+{%- if management == 'None' -%}
+    {%- set management=''-%}
+{%- endif -%}
 
-    {%- set line1= [name," ఆసుపత్రి ",state," లో ఉన్న ఒక ",management," వైద్య సౌకర్యం."] |join('') -%}
-    {%- set line2= [name," ఆసుపత్రి ",state," లో ఉన్నది. ఇది ",management," ద్వారా నిర్వహించబడే వైద్య సౌకర్యం."]|join('') -%}
-    {%- set line3= [name," ",state," లో ఉన్న ఒక ఆరోగ్య కేంద్రం. ఇది ",management," నిర్వహణ లో ఉన్నది."]|join('') -%}
-	{{ [ line1, line2, line3 ] | random }}
-       
+	{{'{{Infobox '}}
+| bodystyle = width:25em;text-align:center;
+| abovestyle = background-color:#cfc;
+| headerstyle = background-color:#ccf;text-align:center;
+| labelstyle = background-color:#ddf; width:20%;text-align:left;
+| title		= {{title}}
+| label1 = కార్యవాహన
+| data1 = ఆరోగ్య సేవలు, వైద్య సంస్థలు
+| label2 = వైద్య పద్ధతి
+| data2 = అల్లోపతి
+| label3 = ఆసుపత్రి వర్గం
+| data3 = {{caretype}}
+| header4 = భౌగోళికం
+| label5 = స్థానం
+| data5 = {{location}}, {{district}} జిల్లా
+| label6 = జిల్లా
+| data6	= {{district}} జిల్లా
+| label7 = రాష్ట్రం
+| data7	= {{state}}
+| label8 =  దేశం
+| data8	= భారతదేశం
+| header12 =  ఇతర వివరములు
+| label13 = గుర్తింపు
+| data13 = నేషనల్ ఆసీక్రెడిటేషన్ బోర్డు ఫర్ హాస్పిటల్స్ అండ్ హెల్త్ కేర్ ప్రొవైడర్స్ (NABH)
+| label14 = స్థాపించిన సంవత్సరం
+| data14	= {{founded}} 
+| label15 = నిర్వహణ
+| data15 = {{management}}
+| header16 = లింకులు
+| label17 = వెబ్సైటు	
+| data17 = {{website}}
+	{{'}}\n'}}
+{%- endmacro -%}
+
+{%- macro intro(name, state, management, managed_by) -%}
+
+    {%- if managed_by == 'None' -%}
+        {%- set line1= [name," ఆసుపత్రి ",state," లో ఉన్న ఒక ",management," వైద్య సౌకర్యం. " ] |join('') -%}
+        {%- set line2= [name," ఆసుపత్రి ", management," వైద్య సౌకర్యం. ఇది ",state," లో ఉన్నది."  ]|join('') -%}
+        {%- set line3= [name," ",state," లో ఉన్న ఒక ఆరోగ్య కేంద్రం. ఇది ",management," నిర్వహణ లో ఉన్నది."]|join('') -%}
+	    {{ [ line1, line2, line3 ] | random }}
+    {%- elif managed_by != 'None' -%}
+        {%- set line1= [name," ఆసుపత్రి ",state," లో ఉన్న ఒక ",management," వైద్య సౌకర్యం. ",managed_by," ఈ ఆసుపత్రి నిర్వహణ పర్యవేక్షిస్తుంది." ] |join('') -%}
+        {%- set line2= [name," ఆసుపత్రి ",state," లో ఉన్నది. ఇది ",managed_by," నిర్వహించబడే వైద్య సౌకర్యం. ",management," విభాగం క్రిందకు వస్తుంది."]|join('') -%}
+        {%- set line3= [name," ",state," లో ఉన్న ఒక ఆరోగ్య కేంద్రం. ఈ ఆసుపత్రి ",managed_by," నిర్వహణ లో ఉన్నది. ఇది ఒక ",management," వైద్య సౌకర్యం"]|join('') -%}
+        {%- set line4= [name," ఆసుపత్రి ",state," లో ఉన్న ఒక ",management," వైద్య సౌకర్యం. ",managed_by," సంస్థ ఈ ఆసుపత్రి బాధ్యతలను నిర్వహిస్తుంది." ] |join('') -%}
+        {{ [ line1, line2, line3, line4 ] | random }}
+    {%- endif -%}
+
 {%- endmacro -%}
 
 {%- macro location(placetype, district, location) -%} {#Add more sentences based on review#}
@@ -23,22 +76,20 @@
 
 {%- macro overview(name, accredited, code, date_first, start_date, end_date, caretype, medical_college) -%}
  	
-    {{ "\n==గుర్తింపు==\n "}}
-	{%- if accredited == True -%}
-        {%- set line1= [name," హాస్పిటల్స్ & హెల్త్ కేర్ ప్రొవైడర్స్ కోసం నేషనల్ అక్రిడిటేషన్ బోర్డు (నాబ్) గుర్తించిన ",caretype,
-        ".  ఈ ఆసుపత్రి యొక్క అక్రిడిటేషన్ సంఖ్య ",code,". ఆసుపత్రి అక్రిడిటేషన్ ",start_date," నుండి ",end_date," వరకు చెల్లుతుంది."] |join('') -%}
-    
+    {{ '==గుర్తింపు=='+'\n' }}
+	{%- if accredited == 'True' -%}
+        {%- set line1= [name," హాస్పిటల్స్ అండ్ హెల్త్ కేర్ ప్రొవైడర్స్ కోసం నేషనల్ అక్రిడిటేషన్ బోర్డు (నాబ్) గుర్తించిన ",caretype,". ఈ ఆసుపత్రి యొక్క అక్రిడిటేషన్ సంఖ్య ",code,". ఆసుపత్రి అక్రిడిటేషన్ ",start_date," నుండి ",end_date," వరకు చెల్లుతుంది."] |join('') -%}
     	{{ [ line1 ] | random }}
 	{%- endif -%}
 	
-    {%- if date_first != None -%}
+    {%- if date_first != 'None' -%}
 		{%- set line1 = ["ఈ ఆసుపత్రిని మొదటిసారి ",date_first,"న  క్వాలిటీ కౌన్సిల్ ఆఫ్ ఇండియా (క్యూసిఐ) గుర్తింపు పొందింది.",
         "ఈనాటికీ ఆ గుర్తింపు ని నిలబెట్టుకుంది ."] | join('')  -%}
         {{ [line1] | random }} 
     {%- endif -%}
    	
        
-    {%- if medical_college != None -%}
+    {%- if medical_college != 'None' -%}
         {{  ["ఈ ఆసుపత్రి వైద్య కళాశాల గా కూడా చర్యలు నిర్వహిస్తుంది. ",
             "ఈ ఆసుపత్రి లో ఒక వైద్య కళాశాల కూడా ఉన్నది. ",
             "ఈ ఆసుపత్రి కి అనుబంధముగా ఒక వైద్య కళాశాల స్థాపించబడినది. ",
@@ -50,8 +101,8 @@
 
 {%- macro history(established_year) -%}
 
-    {{ '\n==చరిత్ర==\n' }}
-	{%- if established_year != 0 -%}
+    {{ '==చరిత్ర=='+'\n' }}
+	{%- if established_year != 'None' -%}
 	{{ [
         "ఈ ఆసుపత్రి "~established_year~" సంవత్సరంలో స్థాపించబడింది.",
         "ఈ ఆసుపత్రి ని "~established_year~" సంవత్సరం లో స్థాపించినారు. " ,
@@ -63,20 +114,27 @@
 
 {%- macro medicalServices(systems, services, professions) -%}
 	
-	{{ '\n==వైద్య సేవలు==\n' }}
-    {% if systems != None -%}
+	{{ '==వైద్య సేవలు=='+'\n' }}
+    {%- if systems != None -%}
 		{{  [
 				"ఈ ఆసుపత్రి ప్రధానముగా "+systems+" వైద్యం చేస్తుంది.",
-                "ఈ ఆసుపత్రి లోని వైద్యులు "+systems+" వైద్యం అందజేస్తారు ",
+                "ఈ ఆసుపత్రి లోని వైద్యులు "+systems+" వైద్యం అందజేస్తారు. ",
 			]|random
 		}}
     {%- endif -%}
-	
-   {% if services| length >=4 -%}
-     {{ "ఈ ఆసుపత్రి అనేక ప్రత్యేకతల లో వైద్య సేవలకు ప్రసిద్ధి గాంచినది. స్పెషలిస్ట్ వైద్యులు పనిచేసే విభాగాల జాబితా :" }}
-       {% for service in services -%}
-        * {{ service + '\n' }}
-       {%- endfor -%}
+	{%- if services == 'None' -%}
+        {%- set line = 'nothing' -%}
+    {%- elif services| length >= 9 -%}
+            {%- set line = services[:6]|join(', ')|string -%}
+     {{ "ఈ ఆసుపత్రి అనేక ప్రత్యేకతల లో వైద్య సేవలకు ప్రసిద్ధి చెందినది. "+line+" వంటి విభాగాలలో క్లినికల్ సేవలు అందించబడతాయి. ఇతర విభాగాల జాబితా :\n\n" }}
+        {%- for service in services[6:] -%}
+        {{ '* '+service + '\n' }}
+        {%- endfor -%}
+    {%- elif services| length >= 6 -%}
+     {{ "ఈ ఆసుపత్రి అనేక ప్రత్యేకతల లో వైద్య సేవలకు ప్రసిద్ధి చెందినది. స్పెషలిస్ట్ వైద్యులు పనిచేసే విభాగాల జాబితా :\n\n" }}
+        {%- for service in services -%}
+        {{ '* '+service + '\n' }}
+        {%- endfor -%}
 	{%- elif services | length > 1 -%}
         {%- set line = services|join(', ')|string -%}
         {{ 'ఈ ఆసుపత్రి లో '+line+' మొదలైన అనేక ప్రత్యేకతలలో క్లినికల్ సేవలు అందించబడతాయి.' }}
@@ -85,21 +143,50 @@
         {{ "ఈ ఆసుపత్రి లో వైద్యులు "+services[0]+" వంటి ప్రత్యేకతల లో ప్రసిద్ధి పొందిన వారు. " }}
 	{%- endif -%}
 
-   {%- if professions| length >=4 -%}
-       {{	"ఈ ఆసుపత్రిలో అందుబాటులో ఉన్న ఇతర వైద్య షధ అనుబంధ వృత్తుల జాబితా :" }}
+    {%- if professions == 'None' -%}
+        {%- set line = 'nothing' -%}
+    {%- elif professions| length >= 9 -%}
+        {%- set line = professions[:5]|join(',' ) | string	-%}
+       {{	"\nఈ ఆసుపత్రిలో '+line+' వంటి వైద్య అనుబంధ వృత్తులలో కూడా వైద్యులు పని చేస్తారు. వాటి జాబితా :\n\n" }}
+        {%- for service in professions[5:] -%}
+            {{ '* '+service + '\n' }}
+        {%- endfor -%}
+
+   {%- elif professions| length >= 6 -%}
+       {{	"\nఈ ఆసుపత్రిలో అందుబాటులో ఉన్న ఇతర వైద్య షధ అనుబంధ వృత్తుల జాబితా :\n\n" }}
+        {%- for service in professions -%}
+            {{ '* '+service + '\n' }}
+        {%- endfor -%}
+
    {%- elif professions | length >= 1 -%}
        {%- set line = professions|join(',' ) | string	-%}
-       {{ 'అదనంగా, ఈ ఆసుపత్రి '+line+' వంటి ఇతర వైద్య అనుబంధ వృత్తులకు కూడా గుర్తించబడింది.' }}
+       {{ '\nఅదనంగా, ఈ ఆసుపత్రి '+line+' వంటి ఇతర వైద్య అనుబంధ వృత్తులకు కూడా గుర్తించబడింది.' }}
   {%- endif -%}
 
 
 {%- endmacro -%}
 
-{%- macro supportServices(bloodbank,ambulance, pharmacy) -%}
-    {{ '\n==సహాయక సేవలు==\n'}}
-	{% if bloodbank == 'Yes' -%}
+{%- macro supportServices(bloodbank,ambulance, pharmacy, vaccination, bloodtransfusion, eyebank, paediatric) -%}
+    
+    {{ '==సహాయక సేవలు=='+'\n' }}
+	{%- if bloodbank == 'Yes'  -%}
 		{{ 'ఆసుపత్రికి అనుబంధముగా అవసరమైనప్పుడు రక్త మార్పిడి సేవలను అందించే బ్లడ్ బ్యాంక్ ఉంది. '}}
+    {%- elif bloodtransfusion == 'Yes' -%}
+        {{        
+            ['ఈ ఆసుపత్రి లో రక్త మార్పిడి సేవలు కూడా లభిస్తాయి.',
+            'ఈ ఆసుపత్రి రక్త మార్పిడి సేవలను అందిస్తుంది.',
+            'రక్త మార్పిడి సేవల కొరకు ఈ ఆసుపత్రి ప్రత్యేకముగా గుర్తించబడినది.' 
+            ]|random
+         }}
 	{%- endif -%}
+    {%- if eyebank == 'Yes' -%}
+		{{ 
+            ['ఈ ఆసుపత్రికి అనుబంధముగా కంటి బ్యాంకు ఉంది.',
+            'ఆసుపత్రిలో ఒక ఐబ్యాంక్ ఉంది. దీని ద్వారా వారు ఎన్నో వ్యక్తులకు సేవలు అందించారు.'
+            ] | random
+        }}
+	{%- endif -%}
+
 	{%- if ambulance == 'Yes' -%}
 		{{ 'ఈ ఆసుపత్రి 24 గంటల అత్యవసర మరియు అంబులెన్స్ సేవలను అందిస్తుంది. వారి వెబ్‌సైట్‌లో హెల్ప్‌లైన్ నంబర్ అందుబాటులో ఉంది. '}}
 	{%- endif -%}	
@@ -108,81 +195,168 @@
 				'ఈ ఆసుపత్రి లో రోగుల కోసం ఒక డిస్పెన్సరీ ఉన్నది . ',
                 'రోగుల అందుబాటు కొరకు ఈ ఆసుపత్రి లో ఒక ఫార్మసీ ని స్థాపించారు . '
 			]|random
-		}}
+		}}        
 	{%- endif -%}
+       {%- if vaccination == 'Yes' -%}
+		{{ [
+				'ఈ ఆసుపత్రి టీకా సేవలను అందిస్తుంది. ',
+                'చిన్న పిల్లల కొరకు ఈ ఆసుపత్రి లో టీకా సేవలు అందించబడతాయి.',
+                'ఈ ఆసుపత్రిలో చిన్న పిల్లలకు అందించే టీకా సేవల విభాగం ఉంది.'
+			]|random
+		}}
+        
+	{%- endif -%}
+
+
+	{%- if paediatric == 'None' -%}
+        {%- set line = 'nothing' -%}
+    {%- elif paediatric| length >= 9 -%}
+    {%- set line = paediatric[:4]|join(', ')|string -%}
+     {{ "ఈ ఆసుపత్రి లో పిల్లల వైద్యం కొరకు ప్రత్యేక విభాగం స్థాపించబడింది. పీడియాట్రిక్ స్పెషలిస్ట్ వైద్యులు '+line+'వంటి విభాగాలలో వైద్యం అందజేస్తారు.పూర్తి పీడియాట్రిక్ సేవల జాబితా :\n\n" }}
+       {%- for service in paediatric[4:] -%}
+            {{'* '+ service + '\n' }}
+       {%- endfor -%}
+
+   {%- elif paediatric| length >= 6 -%}
+     {{ "ఈ ఆసుపత్రి పిల్లలకు ప్రత్యేక శ్రద్ధను అందిస్తుంది. పీడియాట్రిక్ స్పెషలిస్ట్ వైద్యులు పనిచేసే విభాగాల జాబితా :\n\n" }}
+       {%- for service in paediatric -%}
+            {{'* '+ service + '\n' }}
+       {%- endfor -%}
+	{%- elif paediatric | length > 1 -%}
+        {%- set line = paediatric|join(', ')|string -%}
+        {{ 'ఈ ఆసుపత్రి లో పిల్లల వైద్యం కొరకు ప్రత్యేక విభాగం స్థాపించబడింది. '+line+' మొదలైన అనేక ప్రత్యేకతలలో క్లినికల్ సేవలు అందించబడతాయి.' }}
+    {%- elif paediatric | length  == 1 -%}
+        {{ "ఈ ఆసుపత్రి లోని వైద్యులు పేడియాట్రిక్ సేవలకు కూడా గుర్తించబడ్డారు. "+paediatric[0]+" వంటి సేవలు పెద్దలకు మాత్రమే కాకుండా పిల్లలకు కూడా అందిస్తారు." }}
+	{%- endif -%}
+ 
 {%- endmacro -%}
 
-{%- macro facilities(num_staff, num_beds, diagonstic_services, lab_services, other_facilities) -%}
-	{{ '\n==సౌకర్యాలు==\n'}}
-    {% if num_staff != -1 -%}
-        {{ 'ఈ ఆసుపత్రిలో వైద్యులతో సహా సుమారు '~num_stafff~' మంది శిక్షణ పొందిన సిబ్బంది పనిచేస్తున్నారు.'}}
+{%- macro facilities(num_staff, num_beds, operating_rooms, opens_at, closes_at, diagonstic_services, lab_services, other_facilities) -%}
+	{{ '==సౌకర్యాలు=='+'\n' }}
+    {%- if (opens_at != 'None') and (closes_at != 'None') -%}
+    {{ [
+			'\nఈ ఆసుపత్రి ఉదయం '+opens_at+' నుండి సాయంత్రం '+closes_at+' వరకు తెరిచి ఉంటుంది',
+            '\nఈ ఆసుపత్రిలోని వైద్యులు ఉదయం '+opens_at+' నుండి సాయంత్రం '+closes_at+'వరకు అందుబాటులో ఉంటారు.',
+            '\nఆసుపత్రి పని గంటలు పొద్దున్న '+opens_at+' నుండి సాయంత్రం '+closes_at+' వరకు.'
+			]|random
+		}}
+    {%- elif opens_at != 'None'  -%}
+    {{ 
+        [ 
+            '\nఈ వైద్య సౌకర్యం ఉదయం '+opens_at+' గంటలకు తెరుచుకుంటుంది. ',
+            '\nపొద్దున్న '+opens_at+' నుండి ఈ ఆసుపత్రి అందరికి అందుబాటులో ఉంటుంది.'
+        ]|random
+    }}
+    {%- elif closes_at != 'None' -%}
+    {{ 
+        [ 
+            '\nఈ ఆసుపత్రి సాయంత్రం '+closes_at+' గంటలకు మూసి వేయబడుతుంది. ',
+            '\nసాయంత్రం '+closes_at+' వరకు మాత్రమే ఈ ఆసుపత్రి లోని వైద్యులు అందుబాటులో ఉంటారు.'
+        ]|random
+    }}
+    {%- endif -%}
+
+    {%- if (num_staff != 'None') and ( num_staff != '') -%}
+        {{ 'ఈ ఆసుపత్రిలో వైద్యులతో సహా సుమారు '~num_staff~' మంది శిక్షణ పొందిన సిబ్బంది పనిచేస్తున్నారు.'}}
     {%- endif -%}
 	
-    {%- if num_beds != -1 -%}
-        {{ 'శిక్షణ పొందిన సిబ్బంది పనిచేస్తున్నారు. ఈ ఆసుపత్రిలో రోగుల కోసం '~num_beds~' పడకలు ఉన్నాయి. '}}
+    {%- if (num_beds != 'None') and (num_beds != '') -%}
+        {{ 'ఈ ఆసుపత్రిలో రోగుల కోసం '~num_beds~' పడకలు ఉన్నాయి. '}}
     {%- endif -%}
 
+    {%- if ( operating_rooms != 'None' ) and (operating_rooms != '') -%}
+        {{ 'రోగుల కొరకు ఈ ఆసుపత్రి లో నాణ్యమైన పరికరాల తో నిండిన '~operating_rooms~' ఆపరేటింగ్ రూమ్స్ ఉన్నాయి .' }}
+    {%- endif -%}
 
-    {%- if diagonstic_services| length >=4 -%}
-        {{ "ఈ ఆసుపత్రి అందించే రోగనిర్ధారణ సౌకర్యాల జాబితా  :" }}
-        {% for service in diagonstic_services -%}
-            * {{service + '\n'}}
+    {%- if diagonstic_services == 'None' -%}
+        {%- set line = 'nothing' -%}
+    {%- elif diagonstic_services| length >= 6 -%}
+        {%- set line = diagonstic_services [:4]|join(', ') -%}
+        {{ "\nఈ ఆసుపత్రి "+line+ "వంటి రోగనిర్ధారణ సౌకర్యాలు అందిస్తుంది. సౌకర్యాల పూర్తి  జాబితా :\n\n" }}
+        {%- for service in diagonstic_services[4:] -%}
+            {{'* '+service + '\n'}}
         {%- endfor -%}
+
+    {%- elif diagonstic_services| length >= 6 -%}
+        {{ "\nఈ ఆసుపత్రి అందించే రోగనిర్ధారణ సౌకర్యాల జాబితా  :\n\n" }}
+        {%- for service in diagonstic_services -%}
+            {{'* '+service + '\n'}}
+        {%- endfor -%}
+
 	{%- elif diagonstic_services | length > 1 -%}
         {%- set line = diagonstic_services|join(', ')|string -%}
-        {{ line+ 'వంటి రోగనిర్ధారణ సౌకర్యాలు ఆసుపత్రి ద్వారా అందించబడతాయి. '}}
+        {{ '\n'+line+ 'వంటి రోగనిర్ధారణ సౌకర్యాలు ఆసుపత్రి ద్వారా అందించబడతాయి. '}}
     {%- elif diagonstic_services | length  == 1 -%}
-        {{ "ఈ ఆసుపత్రి "+diagonstic_services[0]+"  రోగనిర్ధారణ సౌకర్యాలకు గుర్తించబడినది. " }}
+        {{ "\nఈ ఆసుపత్రి "+diagonstic_services[0]+"  రోగనిర్ధారణ సౌకర్యాలకు గుర్తించబడినది. " }}
 	{%- endif %}
 
-    {%- if lab_services| length >=4 %}
-        {{ 'ఈ ఆసుపత్రి ప్రయోగశాల సేవలకు కూడా ప్రసిద్ధి పొందినది. ఆసుపత్రి లో లభించే సేవల జాబితా  '}}
-        {% for service in lab_services -%}
-            * {{service + '\n'}}
+    {%- if lab_services == 'None' -%}
+        {%- set line = 'nothing' -%}
+    {%- elif lab_services| length >= 6 -%}
+        {%- set line = lab_services[:3]| join(', ' ) | string	-%}
+        {{ '\n'+line+'మొదలైన వాటిలో ఆసుపత్రి ప్రయోగశాల సేవలను NABL బోర్డు గుర్తించింది. ఆసుపత్రి లో లభించే సేవల జాబితా :\n\n'}}
+        {%- for service in lab_services[3:] -%}
+            {{'* '+service + '\n'}}
+        {%- endfor -%}
+
+    {%- elif lab_services| length >= 6 -%}
+        {{ '\nఈ ఆసుపత్రి ప్రయోగశాల సేవలకు కూడా ప్రసిద్ధి పొందినది. ఆసుపత్రి లో లభించే సేవల జాబితా :\n\n'}}
+        {%- for service in lab_services -%}
+            {{'* '+service + '\n'}}
         {%- endfor -%}
 
 	{%- elif lab_services | length >= 1 -%}
-        {%- set line = lab_services|join(',' ) | string	-%}
-        {{  line+'మొదలైన వాటిలో ఆసుపత్రి ప్రయోగశాల సేవలను NABL బోర్డు గుర్తించింది.' }}
+        {%- set line = lab_services|join(', ' ) | string	-%}
+        {{  '\n'+line+'మొదలైన వాటిలో ఆసుపత్రి ప్రయోగశాల సేవలను NABL బోర్డు గుర్తించింది.' }}
 	{%- endif -%}
 
-
-    {%- if other_facilities| length >=4 -%}
-        {{ 'ఈ ఆసుపత్రిలో ఇతర సౌకర్యాలు కూడా అందుబాటులో అందుబాటులో ఉన్నాయి. వాటిలో కొన్ని  :' }}
-        {% for facility in other_facilities -%}
-            * {{facility + '\n'}}
+    
+    {%- if other_facilities == 'None' -%}
+        {%- set line = 'nothing' -%}
+    {%- elif other_facilities| length >= 6 -%}
+        {{ '\nఈ ఆసుపత్రిలో ఇతర సౌకర్యాలు కూడా అందుబాటులో ఉన్నాయి. వాటిలో కొన్ని  :\n\n' }}
+        {%- for facility in other_facilities -%}
+            {{'* '+facility + '\n'}}
         {%- endfor -%}
 
 	{%- elif other_facilities | length >= 1 -%}
         {%- set line = other_facilities|join(',' ) | string	-%}
-        {{ 'ఈ ఆసుపత్రి '+line+' వంటి ఇతర సౌకర్యాలు కూడా ఆసుపత్రి అందచేస్తుంది.' }}
+        {{ '\nఈ ఆసుపత్రి '+line+' వంటి ఇతర సౌకర్యాలు కూడా ఆసుపత్రి అందచేస్తుంది.' }}
 	{%- endif -%}
 
 {%- endmacro -%}
-{%- macro sources(website) -%}
+{%- macro category(country, state, district, city) -%}
 
-	{{ '\n==మూలాలు==\n' }}
-    * {{ 'Data.gov.in వెబ్‌సైట్ విడుదల చేసిన 2021 డేటా నుండి ఈ వివరాలు సేకరించబడ్డాయి.' }}
-    * {{ 'హాస్పిటల్స్ & హెల్త్ కేర్ ప్రొవైడర్స్ కోసం నేషనల్ అక్రిడిటేషన్ బోర్డు (నాబ్) [https://www.nabh.co/frmViewAccreditedHosp.aspx]' }}
-   {%- if website != None %}
-    * {{ 'ఆసుపత్రికి సంబంధించిన ఇతర వివరాలను '+ website+ ' లో చూడవచ్చు.' -}}
-   {% endif %}
-	{{'{{Reflist}}'}}
+	[[వర్గం: తెవికీ ఆసుపత్రులు ]][[వర్గం: తెవికీ  వైద్య సంస్థలు]]
+    [[వర్గం: {{country}} లో ఆసుపత్రులు ]] [[వర్గం: {{country}} లో వైద్య సంస్థలు ]]
+    [[వర్గం: {{state}} లో ఆసుపత్రులు ]] [[వర్గం: {{state}} లో వైద్య సంస్థలు ]]
+    [[వర్గం: {{district}} జిల్లా లో ఆసుపత్రులు ]] [[వర్గం: {{district}} జిల్లా లో వైద్య సంస్థలు ]]
+    [[వర్గం: {{city}} లో ఆసుపత్రులు ]] [[వర్గం: {{city}} లో వైద్య సంస్థలు ]]
 
-	[[Category:Hospital]]
+
+{%- endmacro -%}
+
+{%- macro ending(hospital, website, caretype) -%}
+	{{ '==మూలాలు=='+'\n\n1. ఈ వివరములు [https://www.nabh.co/Allopathic.aspx | హాస్పిటల్స్ అండ్ హెల్త్ కేర్ ప్రొవైడర్స్ కోసం నేషనల్ అక్రిడిటేషన్ బోర్డు (నాబ్)] వారి వెబ్సైటు నుండి సేకరించబడినవి.'+'\n\n'+'2. [https://data.gov.in/resources/national-hospital-directory-geo-code-and-additional-parameters-updated-till-last-month | ఓపెన్ గవర్నమెంట్ డేటా (OGD)] ప్లాట్ఫారం ఇండియా  విడుదల చేసిన 2021 డేటా.\n\n' }}
+    {%-if website != 'None' -%}
+    {{ '3. ['+website+ '|'+hospital+']\n'}}
+    {%-endif-%}
 {%- endmacro -%}
 
 
 
 {#- Article written from here -#}
 
+{#- Hospital_Name -#}
 
-{#- descLine(Caretype) -#}
-{{- intro(Name, State, Management)}}
-{{- location(Placetype, District, Location) }} 
-{{ overview(Name, Accredited, Code , Date_First, Valid_From, Valid_Upto, Caretype, Medical_College) }}
+{# descLine(Caretype) #}
+{{ infobox(Hospital_Name,Caretype, Location, District, State, Country, Placetype, Management, Established_Year, Website) }}
+{{ intro(Hospital_Name, State, Management, Managed_By)}}
+{{ location(Placetype, District, Location) }} 
+{{ overview(Hospital_Name, Accredited, Code , Date_First, Valid_From, Valid_Upto, Caretype, Medical_College) }}
 {{ history(Established_Year) }}
-{{ medicalServices(Systems, Services, Professions) }}
-{{ supportServices(Bloodbank,Ambulance, Pharmacy)}}
-{{ facilities(Num_Staff, Num_Beds, Diagnostic_Services, Lab_Services, Other_Facilities) }}
-{{ sources(Website) }}
+{{ medicalServices(Systems, Clinical_Services, Professions) }}
+{{ supportServices(Bloodbank,Ambulance, Pharmacy, Vaccination, Bloodtransfusion, Eyebank, Paediatric_Services)}}
+{{ facilities(Num_Staff, Num_Beds, Operating_Rooms, Opens_at, Closes_at, Diagnostic_Services, Laboratory_Services, Other_Facilities) }}
+{{ ending(Hospital_Name,Website) }}
+{{ category(Country, State, District, City) }}
